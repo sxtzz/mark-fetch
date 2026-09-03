@@ -5,33 +5,26 @@
 }
 
 :root {
-  /* ---- colors (dark) ---- */
-  --bg-primary: #0b0b0b;
-  --bg-secondary: #111111;
-  --bg-card: #141414;
-  --bg-input: #0e0e0e;
-  --border-color: #242424;
-  --border-hover: #3a3a3a;
-  --text-primary: #ededed;
-  --text-secondary: #8a8a8a;
-  --text-muted: #4a4a4a;
+  --bg-primary: #000000;
+  --bg-secondary: #0a0a0a;
+  --bg-card: #0d0d0d;
+  --bg-input: #080808;
+  --border-color: #1a1a1a;
+  --border-hover: #2a2a2a;
+  --text-primary: #f0f0f0;
+  --text-secondary: #888888;
+  --text-muted: #444444;
   --accent: #6c8cbf;
   --accent-hover: #7fa1d4;
-  --shadow: 0 16px 48px rgba(0, 0, 0, 0.85);
+  --shadow: 0 12px 40px rgba(0,0,0,0.9);
   --radius: 12px;
   --radius-sm: 8px;
-  --transition: 0.2s ease;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'Space Mono', 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
-
-  /* ---- grid background (subtle) ---- */
-  --grid-color: rgba(255, 255, 255, 0.025);
-  --grid-size: 32px;
+  --transition: 0.25s ease;
 }
 
 [data-theme="light"] {
-  --bg-primary: #f4f5f7;
-  --bg-secondary: #e8e9ec;
+  --bg-primary: #f5f6f8;
+  --bg-secondary: #ecedef;
   --bg-card: #ffffff;
   --bg-input: #f0f1f3;
   --border-color: #d0d4da;
@@ -41,39 +34,31 @@
   --text-muted: #8a929e;
   --accent: #5a7db0;
   --accent-hover: #4a6d9e;
-  --shadow: 0 16px 48px rgba(0, 0, 0, 0.07);
-  --grid-color: rgba(0, 0, 0, 0.035);
+  --shadow: 0 12px 40px rgba(0,0,0,0.08);
 }
 
-/* ----- global grid background (Dieter Rams: structure as ornament) ----- */
 body {
-  background-color: var(--bg-primary);
-  background-image:
-    linear-gradient(var(--grid-color) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-  background-size: var(--grid-size) var(--grid-size);
+  background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: var(--font-body);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   padding: 40px 20px 80px;
-  transition: background 0.2s, color 0.2s;
+  transition: background var(--transition), color var(--transition);
 }
 
 .container {
   width: 100%;
-  max-width: 840px;
-  position: relative;
+  max-width: 820px;
 }
 
-/* ----- header (brand + controls) ----- */
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   padding: 0 4px;
 }
 
@@ -86,22 +71,22 @@ body {
 .brand-logo {
   font-size: 28px;
   font-weight: 650;
-  letter-spacing: -0.8px;
   color: var(--text-primary);
-  transition: color 0.2s;
+  letter-spacing: -0.8px;
+  transition: color var(--transition);
 }
 
 .brand-badge {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  padding: 2px 12px;
+  padding: 2px 10px;
   border-radius: 40px;
   font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
+  letter-spacing: 0.3px;
   text-transform: uppercase;
-  letter-spacing: 0.4px;
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
 
 .header-controls {
@@ -110,7 +95,6 @@ body {
   gap: 8px;
 }
 
-/* theme toggle (round) */
 .theme-toggle {
   width: 38px;
   height: 38px;
@@ -121,13 +105,15 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all var(--transition);
   padding: 0;
 }
+
 .theme-toggle:hover {
   border-color: var(--border-hover);
   background: var(--bg-secondary);
 }
+
 .theme-toggle svg {
   width: 19px;
   height: 19px;
@@ -136,13 +122,13 @@ body {
   stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke 0.2s;
+  transition: stroke var(--transition);
 }
+
 .theme-toggle:hover svg {
   stroke: var(--text-primary);
 }
 
-/* mode toggle (segmented) */
 .mode-toggle {
   display: flex;
   gap: 2px;
@@ -150,8 +136,9 @@ body {
   border: 1px solid var(--border-color);
   border-radius: 40px;
   padding: 3px;
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
+
 .mode-btn {
   background: transparent;
   border: none;
@@ -161,15 +148,17 @@ body {
   font-weight: 500;
   color: var(--text-secondary);
   cursor: pointer;
-  transition: all 0.2s;
-  font-family: var(--font-body);
+  transition: all var(--transition);
+  font-family: inherit;
   letter-spacing: 0.2px;
   text-transform: uppercase;
 }
+
 .mode-btn.active {
   background: var(--border-color);
   color: var(--text-primary);
 }
+
 .mode-btn:hover:not(.active) {
   color: var(--text-primary);
 }
@@ -181,10 +170,9 @@ body {
   font-weight: 400;
   padding: 0 4px;
   letter-spacing: 0.1px;
-  transition: color 0.2s;
+  transition: color var(--transition);
 }
 
-/* ----- search row (input + button) ----- */
 .search-row {
   display: flex;
   gap: 0;
@@ -193,52 +181,58 @@ body {
   border-radius: var(--radius);
   overflow: hidden;
   background: var(--bg-card);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color var(--transition), box-shadow var(--transition);
   box-shadow: var(--shadow);
 }
+
 .search-row:focus-within {
   border-color: var(--border-hover);
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(108, 140, 191, 0.06);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.9), 0 0 0 1px rgba(108,140,191,0.05);
 }
+
 .search-row input {
   flex: 1;
   background: var(--bg-input);
   border: none;
   padding: 16px 22px;
-  font-family: var(--font-body);
+  font-family: inherit;
   font-size: 15px;
   color: var(--text-primary);
   outline: none;
   font-weight: 400;
   min-width: 0;
-  transition: background 0.2s, color 0.2s;
+  transition: background var(--transition), color var(--transition);
 }
+
 .search-row input::placeholder {
   color: var(--text-muted);
   font-weight: 350;
 }
+
 .search-row button {
   background: var(--bg-input);
   color: var(--text-secondary);
   border: none;
   border-left: 1px solid var(--border-color);
   padding: 16px 28px;
-  font-family: var(--font-body);
+  font-family: inherit;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition);
   white-space: nowrap;
   display: flex;
   align-items: center;
   gap: 8px;
   letter-spacing: 0.2px;
 }
+
 .search-row button:hover {
   background: var(--bg-card);
   color: var(--text-primary);
   border-left-color: var(--border-hover);
 }
+
 .search-row button svg {
   width: 18px;
   height: 18px;
@@ -249,18 +243,19 @@ body {
   stroke-linejoin: round;
 }
 
-/* ----- output panel ----- */
 .output {
   display: none;
   width: 100%;
   margin-top: 36px;
 }
+
 .output.visible {
   display: block;
-  animation: slideFade 0.3s ease;
+  animation: slideFade 0.35s ease;
 }
+
 @keyframes slideFade {
-  0% { opacity: 0; transform: translateY(8px); }
+  0% { opacity: 0; transform: translateY(10px); }
   100% { opacity: 1; transform: translateY(0); }
 }
 
@@ -270,7 +265,7 @@ body {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: var(--shadow);
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
 
 .preview-toolbar {
@@ -280,8 +275,9 @@ body {
   padding: 10px 18px;
   border-bottom: 1px solid var(--border-color);
   background: var(--bg-secondary);
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
+
 .preview-toolbar .left {
   display: flex;
   align-items: center;
@@ -289,21 +285,25 @@ body {
   font-size: 12px;
   color: var(--text-secondary);
 }
+
 .preview-toolbar .left .dot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
   background: var(--border-color);
   display: inline-block;
-  transition: background 0.2s;
+  transition: background var(--transition);
 }
+
 .preview-toolbar .left .dot.active {
   background: #3fb37f;
 }
+
 .preview-toolbar .right {
   display: flex;
   gap: 4px;
 }
+
 .preview-toolbar .right button {
   background: transparent;
   border: none;
@@ -312,16 +312,18 @@ body {
   border-radius: 4px;
   font-size: 11px;
   cursor: pointer;
-  font-family: var(--font-body);
-  transition: all 0.2s;
+  font-family: inherit;
+  transition: all var(--transition);
   display: flex;
   align-items: center;
   gap: 6px;
 }
+
 .preview-toolbar .right button:hover {
   background: var(--border-color);
   color: var(--text-primary);
 }
+
 .preview-toolbar .right button svg {
   width: 14px;
   height: 14px;
@@ -343,8 +345,8 @@ body {
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--text-primary);
-  font-family: var(--font-mono);
-  transition: background 0.2s, color 0.2s;
+  font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
+  transition: background var(--transition), color var(--transition);
 }
 
 .preview .empty-state {
@@ -357,6 +359,7 @@ body {
   gap: 8px;
   font-size: 13px;
 }
+
 .preview .empty-state svg {
   width: 40px;
   height: 40px;
@@ -367,24 +370,17 @@ body {
   stroke-linejoin: round;
   opacity: 0.4;
 }
+
 .preview .empty-state .hint {
   font-size: 12px;
   color: var(--text-muted);
   opacity: 0.5;
 }
 
-.preview::-webkit-scrollbar {
-  width: 4px;
-}
-.preview::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-.preview::-webkit-scrollbar-thumb {
-  background: var(--border-color);
-  border-radius: 20px;
-}
+.preview::-webkit-scrollbar { width: 4px; }
+.preview::-webkit-scrollbar-track { background: var(--bg-primary); }
+.preview::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 20px; }
 
-/* ----- actions (download, clear) ----- */
 .actions {
   display: flex;
   gap: 10px;
@@ -392,35 +388,40 @@ body {
   justify-content: flex-end;
   flex-wrap: wrap;
 }
+
 .actions button {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   color: var(--text-secondary);
   padding: 9px 20px;
   border-radius: var(--radius-sm);
-  font-family: var(--font-body);
+  font-family: inherit;
   font-size: 12px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition);
   display: flex;
   align-items: center;
   gap: 8px;
   font-weight: 450;
 }
+
 .actions button:hover {
   background: var(--border-color);
   border-color: var(--border-hover);
   color: var(--text-primary);
 }
+
 .actions button.primary {
   background: var(--accent);
   border-color: var(--accent);
   color: #fff;
 }
+
 .actions button.primary:hover {
   background: var(--accent-hover);
   border-color: var(--accent-hover);
 }
+
 .actions button svg {
   width: 16px;
   height: 16px;
@@ -431,7 +432,6 @@ body {
   stroke-linejoin: round;
 }
 
-/* ----- status bar ----- */
 .status-bar {
   margin-top: 12px;
   display: flex;
@@ -442,19 +442,22 @@ body {
   padding: 0 4px;
   flex-wrap: wrap;
   gap: 6px;
-  transition: color 0.2s;
+  transition: color var(--transition);
 }
+
 .status-bar .stats {
   display: flex;
   gap: 14px;
 }
+
 .status-bar .stats span {
   background: var(--bg-card);
   padding: 2px 12px;
   border-radius: 40px;
   border: 1px solid var(--border-color);
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
+
 .status-bar .url-info {
   color: var(--text-muted);
   max-width: 300px;
@@ -464,61 +467,32 @@ body {
   opacity: 0.6;
 }
 
-/* ----- markdown styling (Nothing / Rams) ----- */
-.preview h1,
-.preview h2,
-.preview h3 {
+.preview h1, .preview h2, .preview h3 {
   color: var(--text-primary);
   margin-top: 14px;
   margin-bottom: 6px;
   font-weight: 600;
-  transition: color 0.2s;
+  transition: color var(--transition);
 }
-.preview h1 {
-  font-size: 1.7em;
-  letter-spacing: -0.3px;
-}
-.preview h2 {
-  font-size: 1.35em;
-  color: var(--text-secondary);
-}
-.preview h3 {
-  font-size: 1.15em;
-  color: var(--text-secondary);
-}
-.preview strong {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-.preview em {
-  color: var(--text-secondary);
-}
-.preview a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-.preview a:hover {
-  color: var(--accent-hover);
-}
+.preview h1 { font-size: 1.7em; letter-spacing: -0.3px; }
+.preview h2 { font-size: 1.35em; color: var(--text-secondary); }
+.preview h3 { font-size: 1.15em; color: var(--text-secondary); }
+.preview strong { color: var(--text-primary); font-weight: 600; }
+.preview em { color: var(--text-secondary); }
+.preview a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
+.preview a:hover { color: var(--accent-hover); }
 .preview code {
   background: var(--bg-card);
   padding: 0.1rem 0.5rem;
   border-radius: 4px;
   color: #b8d0b0;
-  font-family: var(--font-mono);
+  font-family: inherit;
   font-size: 0.9em;
   border: 1px solid var(--border-color);
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
-.preview ul,
-.preview ol {
-  padding-left: 26px;
-  margin: 6px 0;
-}
-.preview li {
-  margin: 3px 0;
-}
+.preview ul, .preview ol { padding-left: 26px; margin: 6px 0; }
+.preview li { margin: 3px 0; }
 .preview blockquote {
   border-left: 3px solid var(--accent);
   padding-left: 18px;
@@ -527,60 +501,25 @@ body {
   background: var(--bg-card);
   padding: 8px 18px;
   border-radius: 4px;
-  transition: all 0.2s;
+  transition: all var(--transition);
 }
 .preview hr {
   border: none;
   border-top: 1px solid var(--border-color);
   margin: 16px 0;
-  transition: border-color 0.2s;
+  transition: border-color var(--transition);
 }
-.preview p {
-  margin: 6px 0;
-}
+.preview p { margin: 6px 0; }
 
-/* ----- responsive ----- */
 @media (max-width: 640px) {
-  body {
-    padding: 20px 12px 60px;
-  }
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .brand-logo {
-    font-size: 24px;
-  }
-  .search-row input {
-    padding: 14px 16px;
-    font-size: 14px;
-  }
-  .search-row button {
-    padding: 14px 18px;
-    font-size: 13px;
-  }
-  .preview {
-    padding: 18px 16px;
-    font-size: 13px;
-    max-height: 380px;
-  }
-  .preview-toolbar {
-    padding: 8px 12px;
-    flex-wrap: wrap;
-    gap: 6px;
-  }
-  .actions button {
-    padding: 8px 14px;
-    font-size: 11px;
-  }
-  .status-bar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .mode-btn {
-    font-size: 10px;
-    padding: 4px 10px;
-  }
+  body { padding: 20px 12px 60px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .brand-logo { font-size: 24px; }
+  .search-row input { padding: 14px 16px; font-size: 14px; }
+  .search-row button { padding: 14px 18px; font-size: 13px; }
+  .preview { padding: 18px 16px; font-size: 13px; max-height: 380px; }
+  .preview-toolbar { padding: 8px 12px; flex-wrap: wrap; gap: 6px; }
+  .actions button { padding: 8px 14px; font-size: 11px; }
+  .status-bar { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .mode-btn { font-size: 10px; padding: 4px 10px; }
 }
