@@ -1,6 +1,4 @@
-// Main application logic
 (function() {
-  // DOM elements
   const urlInput = document.getElementById('urlInput');
   const fetchBtn = document.getElementById('fetchBtn');
   const previewBox = document.getElementById('previewBox');
@@ -16,27 +14,12 @@
   const statusLabel = document.getElementById('statusLabel');
   const themeToggle = document.getElementById('themeToggle');
 
-  // State
   let currentMarkdown = '';
   let lastFetchedUrl = '';
   let currentMode = 'standard';
+  let wordWrap = false;
   let darkTheme = true;
 
-  // Initialize markdown-it
-  const md = window.markdownit({
-    html: true,
-    linkify: true,
-    typographer: true
-  });
-
-  // Initialize Turndown for HTML to Markdown conversion
-  const turndownService = new TurndownService({
-    headingStyle: 'atx',
-    codeBlockStyle: 'fenced',
-    emDelimiter: '*'
-  });
-
-  // Theme toggle
   themeToggle.addEventListener('click', function() {
     darkTheme = !darkTheme;
     document.documentElement.setAttribute('data-theme', darkTheme ? 'dark' : 'light');
@@ -44,12 +27,10 @@
     if (darkTheme) {
       svg.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 6 6 0 1 1-9-9Z"/>';
     } else {
-      svg.innerHTML =
-        '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      svg.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
     }
   });
 
-  // Mode toggle
   document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.addEventListener('click', function() {
       document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -60,22 +41,14 @@
     });
   });
 
-  // Word wrap toggle
-  wordWrapBtn.addEventListener('click', function() {
-    const isWrapped = previewBox.style.whiteSpace === 'pre-wrap';
-    previewBox.style.whiteSpace = isWrapped ? 'nowrap' : 'pre-wrap';
-    this.style.opacity = isWrapped ? '0.5' : '1';
-  });
-
   function updateStatus(text, isGood = true) {
     statusLabel.textContent = text;
     statusDot.className = 'dot' + (isGood ? ' active' : '');
   }
 
-  function renderMarkdown(mdText) {
-    currentMarkdown = mdText;
-    const trimmed = mdText.trim();
-    
+  function renderMarkdown(md) {
+    currentMarkdown = md;
+    const trimmed = md.trim();
     if (!trimmed) {
       previewBox.innerHTML = `
         <div class="empty-state">
@@ -89,43 +62,71 @@
       return;
     }
 
-    let processed = mdText;
-    
+    let processed = md;
     if (currentMode === 'clean') {
-      // Remove formatting for clean text view
       processed = processed.replace(/\*\*(.*?)\*\*/g, '$1');
       processed = processed.replace(/\*(.*?)\*/g, '$1');
       processed = processed.replace(/\[(.*?)\]\(.*?\)/g, '$1');
       processed = processed.replace(/^[\-\*]\s+/gim, '• ');
       processed = processed.replace(/^>\s+/gim, '');
-      previewBox.innerHTML = `<pre style="white-space:pre-wrap;font-family:var(--font-mono);margin:0;color:var(--text-primary);">${processed}</pre>`;
     } else if (currentMode === 'raw') {
-      // Show raw markdown
-      let html = mdText.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      previewBox.innerHTML = `<pre style="white-space:pre-wrap;font-family:var(--font-mono);margin:0;color:var(--text-primary);">${html}</pre>`;
-    } else {
-      // Standard mode - render markdown to HTML
-      try {
-        const rendered = md.render(processed);
-        previewBox.innerHTML = rendered;
-      } catch (e) {
-        previewBox.innerHTML = `<pre style="white-space:pre-wrap;font-family:var(--font-mono);margin:0;color:var(--text-primary);">${processed}</pre>`;
-      }
+      let html = md.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      previewBox.innerHTML = `<pre style="white-space:pre-wrap;font-family:inherit;margin:0;color:var(--text-primary);">${html}</pre>`;
+      const words = md.split(/\s+/).filter(w => w.length > 0).length;
+      charCount.textContent = md.length + ' chars';
+      wordCount.textContent = words + ' words';
+      return;
     }
 
-    // Update stats
-    const words = mdText.split(/\s+/).filter(w => w.length > 0).length;
-    charCount.textContent = mdText.length + ' chars';
+    let html = processed
+      .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+      .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+      .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+      .replace(/`(.*?)`/g, '<code>$1</code>')
+      .replace(/^[\-\*]\s+(.*)$/gim, '<li>$1</li>')
+      .replace(/^\d+\.\s+(.*)$/gim, '<li>$1</li>')
+      .replace(/^>\s+(.*)$/gim, '<blockquote>$1</blockquote>')
+      .replace(/^---$/gim, '<hr>')
+      .split('\n\n').map(para => {
+        if (para.trim() === '') return '';
+        if (para.match(/^<[h1|h2|h3|ul|ol|li|blockquote|hr]/)) return para;
+        if (para.match(/^<li>/)) return para;
+        return `<p>${para}</p>`;
+      }).join('');
+
+    html = html.replace(/(<li>.*?<\/li>)\s*(?=<li>)/g, '$1');
+    html = html.replace(/(<li>.*?<\/li>)+/g, (match) => `<ul>${match}</ul>`);
+
+    previewBox.innerHTML = html;
+    const words = md.split(/\s+/).filter(w => w.length > 0).length;
+    charCount.textContent = md.length + ' chars';
     wordCount.textContent = words + ' words';
+  }
+
+  async function fetchWithDefuddle(url) {
+    const apiUrl = `https://defuddle.md/${url}`;
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 20000);
+      const response = await fetch(apiUrl, {
+        signal: controller.signal,
+        headers: { 'Accept': 'text/markdown' }
+      });
+      clearTimeout(timeoutId);
+      if (!response.ok) throw new Error(`API ${response.status}`);
+      return await response.text();
+    } catch (error) {
+      if (error.name === 'AbortError') throw new Error('Timeout (20s)');
+      throw new Error(error.message);
+    }
   }
 
   async function fetchWebpage(url) {
     let cleanUrl = url.trim();
-    if (!cleanUrl) { 
-      alert('Please enter a URL.');
-      return; 
-    }
-    
+    if (!cleanUrl) { alert('Enter a URL.'); return; }
     if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
       cleanUrl = 'https://' + cleanUrl;
     }
@@ -141,38 +142,18 @@
     updateStatus('Fetching…', true);
 
     try {
-      // Use a CORS proxy to fetch the webpage
-      const response = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(cleanUrl)}`, {
-        signal: AbortSignal.timeout(15000)
-      });
-      
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-      const html = await response.text();
-      
-      // Use Turndown to convert HTML to Markdown
-      const markdown = turndownService.turndown(html);
-      
-      if (!markdown || markdown.trim().length < 10) {
-        throw new Error('No readable content found.');
-      }
-
-      // Clean up the markdown a bit
-      let cleaned = markdown
-        .replace(/\n{3,}/g, '\n\n') // Remove excessive newlines
-        .trim();
-
-      renderMarkdown(cleaned);
+      const markdown = await fetchWithDefuddle(cleanUrl);
+      if (!markdown || markdown.trim().length < 6) throw new Error('No readable content.');
+      renderMarkdown(markdown);
       lastFetchedUrl = cleanUrl;
       urlInfo.textContent = cleanUrl;
-      updateStatus('Done ✓', true);
+      updateStatus('Done', true);
     } catch (err) {
-      console.error('Fetch error:', err);
       previewBox.innerHTML = `
         <div class="empty-state">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          <span>${err.message || 'Failed to fetch page'}</span>
-          <span class="hint">try another URL or check your connection</span>
+          <span>${err.message}</span>
+          <span class="hint">try another URL</span>
         </div>
       `;
       updateStatus('Error', false);
@@ -184,44 +165,28 @@
       alert('Convert a webpage first.');
       return;
     }
-    
     const blob = new Blob([currentMarkdown], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    const name = lastFetchedUrl ? 
-      lastFetchedUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '').replace(/[^a-zA-Z0-9]/g, '_') || 'page' : 
-      'page';
+    const name = lastFetchedUrl ? lastFetchedUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '').replace(/[^a-zA-Z0-9]/g, '_') || 'page' : 'page';
     a.download = `${name}.md`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    URL.revokeObjectURL(url);
   }
 
-  async function copyMarkdown() {
+  function copyMarkdown() {
     if (!currentMarkdown || currentMarkdown.trim() === '') {
       alert('Nothing to copy.');
       return;
     }
-    
-    try {
-      await navigator.clipboard.writeText(currentMarkdown);
+    navigator.clipboard.writeText(currentMarkdown).then(() => {
       const orig = statusLabel.textContent;
-      updateStatus('Copied! ✓', true);
+      updateStatus('Copied!', true);
       setTimeout(() => updateStatus(orig, true), 1500);
-    } catch {
-      // Fallback for older browsers
-      const textarea = document.createElement('textarea');
-      textarea.value = currentMarkdown;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      const orig = statusLabel.textContent;
-      updateStatus('Copied! ✓', true);
-      setTimeout(() => updateStatus(orig, true), 1500);
-    }
+    }).catch(() => alert('Copy failed.'));
   }
 
   function clearAll() {
@@ -235,21 +200,19 @@
     urlInput.focus();
   }
 
-  // Event listeners
-  fetchBtn.addEventListener('click', () => fetchWebpage(urlInput.value));
-  
-  urlInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      fetchWebpage(urlInput.value);
-    }
+  wordWrapBtn.addEventListener('click', function() {
+    wordWrap = !wordWrap;
+    previewBox.style.whiteSpace = wordWrap ? 'pre-wrap' : 'pre-wrap';
   });
 
+  fetchBtn.addEventListener('click', () => fetchWebpage(urlInput.value));
+  urlInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); fetchWebpage(urlInput.value); }
+  });
   downloadBtn.addEventListener('click', downloadMarkdown);
   clearBtn.addEventListener('click', clearAll);
   copyBtn.addEventListener('click', copyMarkdown);
 
-  // Initialize
   renderMarkdown('');
   outputArea.classList.remove('visible');
   urlInput.focus();
