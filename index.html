@@ -3,96 +3,90 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MarkFetch</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,650&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <title>MarkFetch · extract & convert</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <!-- header -->
-    <div class="header">
-      <div class="brand">
-        <span class="brand-logo">MarkFetch</span>
-        <span class="brand-badge">beta</span>
-      </div>
-      <div class="header-controls">
-        <div class="mode-toggle" id="modeToggle">
-          <button class="mode-btn active" data-mode="standard">Std</button>
-          <button class="mode-btn" data-mode="clean">Clean</button>
-          <button class="mode-btn" data-mode="raw">Raw</button>
-        </div>
-        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-          <svg viewBox="0 0 24 24">
-            <path d="M12 3a6 6 0 0 0 9 9 6 6 0 1 1-9-9Z" />
-          </svg>
-        </button>
-      </div>
+<div class="container">
+
+  <div class="header">
+    <div class="brand">
+      <span class="brand-logo">MarkFetch</span>
+      <span class="brand-badge">beta</span>
     </div>
-
-    <div class="sub">extract, convert, and export any webpage as clean Markdown</div>
-
-    <!-- search row -->
-    <div class="search-row">
-      <input type="text" id="urlInput" placeholder="https://example.com/article" autofocus spellcheck="false" />
-      <button id="fetchBtn">
-        <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-        Convert
+    <div class="header-controls">
+      <div class="mode-toggle" id="modeToggle">
+        <button class="mode-btn active" data-mode="standard">Std</button>
+        <button class="mode-btn" data-mode="clean">Clean</button>
+        <button class="mode-btn" data-mode="raw">Raw</button>
+      </div>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 3a6 6 0 0 0 9 9 6 6 0 1 1-9-9Z" />
+        </svg>
       </button>
-    </div>
-
-    <!-- output panel -->
-    <div class="output" id="outputArea">
-      <div class="preview-wrapper">
-        <div class="preview-toolbar">
-          <div class="left">
-            <span class="dot" id="statusDot"></span>
-            <span id="statusLabel">Ready</span>
-          </div>
-          <div class="right">
-            <button id="copyBtn">
-              <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-              Copy
-            </button>
-            <button id="wordWrapBtn">
-              <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h12"/><path d="M3 18h6"/><path d="M18 9l3 3-3 3"/></svg>
-              Wrap
-            </button>
-          </div>
-        </div>
-        <div class="preview" id="previewBox">
-          <div class="empty-state">
-            <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/></svg>
-            <span>markdown preview</span>
-            <span class="hint">paste a URL and convert</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="primary" id="downloadBtn">
-          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Download .md
-        </button>
-        <button id="clearBtn">
-          <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-          Clear
-        </button>
-      </div>
-
-      <div class="status-bar">
-        <div class="stats">
-          <span id="charCount">0 chars</span>
-          <span id="wordCount">0 words</span>
-        </div>
-        <div class="url-info" id="urlInfo">—</div>
-      </div>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/turndown@7.1.2/dist/turndown.min.js"></script>
-  <script src="script.js"></script>
+  <div class="sub">extract, convert, and export any webpage as clean Markdown</div>
+
+  <div class="search-row">
+    <input type="text" id="urlInput" placeholder="https://example.com/article" autofocus spellcheck="false">
+    <button id="fetchBtn">
+      <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+      Convert
+    </button>
+  </div>
+
+  <div class="output" id="outputArea">
+    <div class="preview-wrapper">
+      <div class="preview-toolbar">
+        <div class="left">
+          <span class="dot" id="statusDot"></span>
+          <span id="statusLabel">Ready</span>
+        </div>
+        <div class="right">
+          <button id="copyBtn">
+            <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            Copy
+          </button>
+          <button id="wordWrapBtn">
+            <svg viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M3 12h12"/><path d="M3 18h6"/><path d="M18 9l3 3-3 3"/></svg>
+            Wrap
+          </button>
+        </div>
+      </div>
+      <div class="preview" id="previewBox">
+        <div class="empty-state">
+          <svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M8 8h8"/><path d="M8 12h6"/><path d="M8 16h4"/></svg>
+          <span>markdown preview</span>
+          <span class="hint">paste a URL and convert</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="primary" id="downloadBtn">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download .md
+      </button>
+      <button id="clearBtn">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Clear
+      </button>
+    </div>
+
+    <div class="status-bar">
+      <div class="stats">
+        <span id="charCount">0 chars</span>
+        <span id="wordCount">0 words</span>
+      </div>
+      <div class="url-info" id="urlInfo">—</div>
+    </div>
+  </div>
+
+</div>
+
+<script src="script.js"></script>
 </body>
 </html>
