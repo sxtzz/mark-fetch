@@ -28,7 +28,7 @@
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/md.git
+git clone https://github.com/yourusername/mark-fetch.git
 
 # Open in browser
 open index.html
